@@ -1,6 +1,7 @@
 import http from "http";
 import WebSocket from "ws";
 import express from "express";
+import { parse } from "path";
 
 const app = express();
 
@@ -16,18 +17,27 @@ const handleListen = () => console.log(`Listening on http://localhost:3000`);
 const server = http.createServer(app); // 내 http 서버에 접근할 수 있게 됨
 const wss = new WebSocket.Server({ server }); // http 서버 위에 ws 서버 만들기
 
+const sockets = [];
+
 // socket : 연결된 브라우저
 wss.on("connection", (socket) => {
+  sockets.push(socket);
+  socket["nickname"] = "Anonymous";
   console.log("Connected to Browser ✅");
-  // socket에 있는 메서드 사용
-  // socket으로 직접적인 연결을 제공해줌
   socket.on("close", () => {
     console.log("Disconnected from the Browser ❌");
   });
-  socket.on("message", (message) => {
-    console.log(message.toString("utf8"));
+  socket.on("message", (msg) => {
+    const message = JSON.parse(msg);
+    switch (message.type) {
+      case "new_message":
+        sockets.forEach((aSocket) =>
+          aSocket.send(`${socket.nickname}: ${message.payload}`)
+        );
+      case "nickname":
+        socket["nickname"] = message.payload;
+    }
   });
-  socket.send("hello!!!");
 });
 
 server.listen(3000, handleListen);

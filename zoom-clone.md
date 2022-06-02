@@ -97,7 +97,8 @@
 
 ### WebSocket
 
-- HTTP  
+- HTTP
+
   - stateless : backend가 유저를 기억하지 못함
   - request와 response 과정 뒤에 백엔드는 유저를 잊어버림
   - reponse를 주면 끝남 그리고 다시 request를 기다림
@@ -109,6 +110,7 @@
   - 서버는 유저가 물어봐야 답할 수 있다
 
 - WebSocket
+
   - http와는 전혀 다른 프로토콜
   - 웹소켓 연결이 일어날 땐 마치 악수처럼 작동
   - 브라우저가 서버로 웹소켓 리퀘를 보내면 서버가 받거나 거절하거나
@@ -124,4 +126,12 @@
   - 브라우저와 백엔드 사이 뿐만 아니라 백엔드와 백엔드 사이에서도 가능 (http도 마찬가지)
   - 프론트엔드에서 아무것도 설치하지 않아도 브라우저에서 지원해줘서 사용 가능
   - 프론트엔드에서 `btn.addEventListener("click", fn)` 하듯이 webSocket에도 event가 있고, event가 발동될 때 사용할 function을 만들면 됨
-  
+
+
+## socket
+
+- socket.send
+  - 메세지를 구분하기 위해서 string이 아닌 json 타입의 값을 보내고 싶음
+  - socket에 send 할 때 string 타입 밖에 못 보냄 -> Json 보내려면? -> `JSON.stringify`, `JSON.parse` 를 사용하자
+
+- socket은 객체이므로 내맘대로 프로퍼티 추가 가능
