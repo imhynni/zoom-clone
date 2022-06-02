@@ -127,11 +127,33 @@
   - 프론트엔드에서 아무것도 설치하지 않아도 브라우저에서 지원해줘서 사용 가능
   - 프론트엔드에서 `btn.addEventListener("click", fn)` 하듯이 webSocket에도 event가 있고, event가 발동될 때 사용할 function을 만들면 됨
 
-
 ## socket
 
 - socket.send
+
   - 메세지를 구분하기 위해서 string이 아닌 json 타입의 값을 보내고 싶음
   - socket에 send 할 때 string 타입 밖에 못 보냄 -> Json 보내려면? -> `JSON.stringify`, `JSON.parse` 를 사용하자
 
 - socket은 객체이므로 내맘대로 프로퍼티 추가 가능
+
+## 🍎 Socket IO 🍎
+
+- front-end와 back-end 간 실시간 통신을 가능하게 해주는 프레임워크 또는 라이브러리
+- 실시간 기능을 만드는 데 더 편리한 기능 제공
+- 실시간, 양방향, event 기반의 통신을 가능하게 함
+- socket IO는 webSocket을 실행하는 게 아님
+- socket IO는 웹소켓의 부가 기능이 아님
+- websocket은 Socket IO가 실시간, 양방향, event 기반 통신을 제공하는 방법 중 하나
+- websocket 이용이 불가능하면 socket IO는 다른 방법을 이용해 계속 작동할 것
+- 우리에게 신뢰성을 주는 것
+- 브라우저가 주는 websocket은 socket IO와 호환이 안되므로(부가기능이 아니므로) 브라우저에 설치를 해야 함
+- 브라우저에 socketIO를 설치하면, io라는 function을 볼 수 있다
+  - io : 자동으로 백엔드 socket.io와 연결해주는 function, 알아서 socket.io를 실행하고 있는 서버를 찾음
+- 💡 socket.emit(event, payload, function)
+  - 만들고 싶은 어떤 event라도 보낼 수 있음
+  - emit을 하면 argument를 보낼 수 있음 (js object도 가능), 하나가 아닌 여러개 전송 가능
+  - 🌟 프론트엔드에서 백엔드로 function을 보내고 백엔드에서 그 함수를 호출하면 프론트엔드에서 그 함수가 실행됨 🌟 굉장히 중요한 기능!!!
+    프론트엔드에 있는 코드를 호출은 백엔드가 했는데 실행은 프론트엔드에서 되다니,,~
+    예를 들어 처리 비용이 크고 오래 걸리는 작업을 한다고 했을 때, 프론트엔드에 작업을 완료했다고 알리고 싶은 경우 사용 가능, 즉 끝났을 때 실행하는 함수 (websocket에서는 불가)  
+    별다른 거 필요없이 마지막 argument를 function으로 주면 됨  
+    함수를 통해 백엔드->프론트엔드 argument도 전달할 수 있음!!
