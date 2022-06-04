@@ -17,7 +17,7 @@ const httpServer = http.createServer(app); // 내 http 서버에 접근할 수 �
 const wsServer = SocketIO(httpServer);
 
 wsServer.on("connection", (socket) => {
-  socket["nickname"] = "Anonymous";
+  socket["nickname"] = "익명";
   socket.onAny((event) => {
     console.log(`Socket Event : ${event}`);
   });
