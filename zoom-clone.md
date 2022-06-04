@@ -183,11 +183,45 @@
   });
   ```
 
+- socket들도 전용 방(private room)이 있어서 private message를 보낼 수 있음
 - 방을 나갈 때, 클라이언트와 서버가 연결이 끊어지기 전에 마지막 굿바이 메세지를 보낼 수 있다.
   disconnect != disconnecting
+
+  - disconnect  
+    room을 떠난 후
+  - disconnecting
+    room을 떠나기 직전
+
   ```js
   socket.on("disconnecting"),
     () => {
       socket.rooms.forEach((room) => socket.to(room).emit("bye"));
     };
+  ```
+
+- Adapter  
+  ![img](https://socket.io/assets/images/mongo-adapter-88a4451b9d19d21c8d92d9a7586df15b.png)
+  - 다른 서버들 사이에 실시간 어플리케이션을 동기화하는 것
+  - DB를 사용하려면 Adapter를 꼭 사용해야함
+  - 누가 연결되었는지, room이 몇개인지 알려줌
+  - `rooms`, `socket ID`
+  - `maps`를 이용
+  - Map에 있는 rooms를 확인하고 room의 id도 확인, room id가 socket id에도 있으면 그건 private room, 아니라면 public room
+  - `map.get`, `map.key`를 이용해서 key가 socket ID인지 아니면 방제목인지 알 수 있음 -> 판별 후 public만 남기도록
+  ```js
+  rooms.forEach((_, key) => {
+    if (sids.get(key) === undefined) {
+      console.log(key);
+    }
+  });
+  ```
+- `server.sockets.emit`  
+  연결된 모든 socket에게 메세지를 보내줌
+
+- set
+  unique한 item들
+  room map 안에 set이 존재, set의 size로 room의 사람 수 알 수 있음
+  ```js
+  const food = new Set(["pizza", "love"]);
+  food.size;
   ```
