@@ -17,11 +17,26 @@ const httpServer = http.createServer(app); // 내 http 서버에 접근할 수 �
 const wsServer = SocketIO(httpServer);
 
 wsServer.on("connection", (socket) => {
+  socket["nickname"] = "Anonymous";
+  socket.onAny((event) => {
+    console.log(`Socket Event : ${event}`);
+  });
   socket.on("enter_room", (roomName, done) => {
-    console.log(roomName);
-    setTimeout(() => {
-      done("Hello from the backend");
-    }, 10000);
+    socket.join(roomName);
+    done();
+    socket.to(roomName).emit("welcome", socket.nickname);
+  });
+  socket.on("disconnecting", () => {
+    socket.rooms.forEach((room) => {
+      socket.to(room).emit("bye", socket.nickname);
+    });
+  });
+  socket.on("nickname", (nickname) => {
+    socket["nickname"] = nickname;
+  });
+  socket.on("new_message", (roomName, msg, done) => {
+    socket.to(roomName).emit("new_message", `${socket.nickname} : ${msg}`);
+    done();
   });
 });
 

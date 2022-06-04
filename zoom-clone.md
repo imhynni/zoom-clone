@@ -157,3 +157,37 @@
     예를 들어 처리 비용이 크고 오래 걸리는 작업을 한다고 했을 때, 프론트엔드에 작업을 완료했다고 알리고 싶은 경우 사용 가능, 즉 끝났을 때 실행하는 함수 (websocket에서는 불가)  
     별다른 거 필요없이 마지막 argument를 function으로 주면 됨  
     함수를 통해 백엔드->프론트엔드 argument도 전달할 수 있음!!
+- socket IO는 room 기능을 제공한다.
+  - `socket.join("roomName")`  
+    방에 들어가기
+  - `socket.rooms`  
+    socket이 어떤 방에 있는지 알 수 있음
+  - `socket.id`  
+    socket에는 아이디가 있어서 아이디로 구별할 수 있음
+  - socket에서 어떤 이벤트가 발생하면 알려줌
+    ```js
+    socket.onAny((event) => {
+      console.log(`socket event : ${event}`);
+    });
+    ```
+- 다른 사람들에게 이벤트를 보내는 기능, 개인 메세지를 보내는 기능
+
+  ```js
+  io.on("connection", (socket) => {
+    socket.to("others").emit("an event", { some: "data" });
+    // "others"는 방 이름
+    socket.to("room1").to("room2").emit("hello");
+
+    socket.to(["room1", "room2"]).emit("hello");
+    socket.to(/* another socket ID */).emit("hey");
+  });
+  ```
+
+- 방을 나갈 때, 클라이언트와 서버가 연결이 끊어지기 전에 마지막 굿바이 메세지를 보낼 수 있다.
+  disconnect != disconnecting
+  ```js
+  socket.on("disconnecting"),
+    () => {
+      socket.rooms.forEach((room) => socket.to(room).emit("bye"));
+    };
+  ```
