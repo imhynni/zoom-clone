@@ -268,3 +268,21 @@
   내 장치에 공용주소를 알려주는 서버
   그래야 다른 네트워크에 있는 장치들이 서로를 찾을 수 있음
   WebRTC로 서비스를 만들려면 내 소유의 STUN 서버를 만들어서 돌려야 함
+
+### Data Channel
+
+- 무엇이든 주고받을 수 있게 함
+- socket.io 없이도 채팅을 만들 수 있음
+- 메세지가 peer-to-peer로 전달됨
+- webRTC 쓰는 사람 대부분은 data channel을 쓸 것
+- datachannel은 just string, 업로드가 굉장히 빠름
+
+### WebRTC를 쓰면 안되는 곳
+
+- 너무 많은 peer를 가질 때, 수가 늘어나면 느려지기 시작할 것 (한 3명까지만...)
+- SFU(Selective Forwarding Unit)  
+  내 스트림을 한번만 업로드 하면 됨
+  서버에 업로드 하면 서버는 다른 사람에게 저사양의 스트림 제공
+  말하는 사람이나 스크린 공유하는 사람은 좀 더 좋은 사양
+
+### 서버를 갖는 것도 괜찮다면 socket.io, peer-to-peer를 하고 싶고 메세지를 보내는 데 서버는 필요 없다면 data channel
