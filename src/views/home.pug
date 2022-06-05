@@ -11,27 +11,28 @@ html(lang="en")
             h1 Zoom-clone
         main
             div#welcome
-                div 💡 이름을 입력하지 않으면 익명으로 참가돼요.
-                div#nickname
-                    form
-                        input(placeholder="nickname", required, type="text")
-                        button Save
+                //- div 💡 이름을 입력하지 않으면 익명으로 참가돼요.
+                //- div#nickname
+                //-     form
+                //-         input(placeholder="nickname", required, type="text")
+                //-         button Save
                 div#roomName
                     form
                         input(placeholder="room name", required, type="text")
                         button Enter Room
-                h4 Open Rooms: 
-                ul
-            div#room
-                h3
-                ul
-                form#msg
-                    input(placeholder="message", required, type="text")
-                    button Send
-            div#myStream
-                video#myFace(autoplay, playsinline, width="400", height="400")
-                button#mute 음소거
-                button#camera 비디오 끄기
-                select#cameras
+                //- h4 Open Rooms: 
+                //- ul
+            //- div#room
+            //-     h3
+            //-     ul
+            //-     form#msg
+            //-         input(placeholder="message", required, type="text")
+            //-         button Send
+            div#call
+                div#myStream
+                    video#myFace(autoplay, playsinline, width="400", height="400")
+                    button#mute 음소거
+                    button#camera 비디오 끄기
+                    select#cameras
         script(src="/socket.io/socket.io.js")
         script(src="/public/js/app.js")

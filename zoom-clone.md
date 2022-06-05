@@ -225,3 +225,38 @@
   const food = new Set(["pizza", "love"]);
   food.size;
   ```
+
+## Video Call
+
+- `navigator.mediaDevice.getUserMedia`  
+   유저의 유저미디어 string을 줌
+- 비디오와 오디오의 track을 사용할 수 있음
+- `enumerateDevices()`  
+  모든 장치 정보를 줌
+
+### WebRTC
+
+![img](https://velog.velcdn.com/images/jsw4215/post/b6706bea-56de-4b49-b86d-65131aa0dad9/image.webp)
+
+- 실시간 커뮤니케이션을 가능하게 해주는 기술
+- peer-to-peer
+  - socket IO로 chat을 만들었을 때, 한 서버에 많은 web socket이 연결돼 있고, 한 web socket이 메세지를 보냈을 때 그 메세지는 서버로 보내져서 서버가 메세지를 모두에게 전달했음
+  - 즉, 모두가 그 서버에 연결돼 있고 그 서버는 모두에게 메세지를 보내는 상황
+  - peer-to-peer은 오디오와 텍스트가 서버로 가지 않고 상대방에게 바로 감
+  - 메세지 전달에 서버가 필요 없어서 실시간(real-time)이 굉장히 빠른 이유
+  - 브라우저에 직접 전달하면 됨
+  - 브라우저끼리 직접 연결됨
+  - 서버가 필요하긴 한데 비디오나 오디오 전달에 필요한 게 아니고 signaling이라는 걸 하기 위해 필요함
+  - signaling이 끝나면 peer-to-peer가 가능해짐
+  - 브라우저로 하여금 상대가 어디에 있는지 알게 하기 위해 서버가 필요
+  - 브라우저는 서버한테 인터넷에서의 그들의 위치, settings, configuration, 방화벽, 라우터 등 정보 전달
+  - 서버가 그 정보를 다른 브라우저에게 전달, 브라우저가 서로 찾을 수 있게 됨
+- 서버는 어떤 브라우저에게 다른 브라우저의 위치를 알려줄 때만 사용됨
+  ![img](https://raw.githubusercontent.com/satanas/simple-signaling-server/master/doc/RTCPeerConnection-diagram.png)
+  (addStream 대신 makeConnection 사용)
+- Peer A에서 offer를 만들었고, 그다음 setLocalDescription을 했는데 이는 Peer A의 local description
+- Peer B로 그 offer를 보내고, 그 offer를 받는 것이 setRemoteDesciption
+- 왔다갔다 핑퐁을 잘 이해하기
+- offer와 answer받기를 모두 끝내면 peer-to-peer 연결의 양쪽에서 icecandidate라는 이벤트를 실행하기 시작
+  - ICE candidate  
+    webRTC에 필요한 프로토콜, 브라우저가 서로 소통할 수 있게 해주는 프로세스, 어떤 소통 방법이 가장 좋을 것인지를 제안

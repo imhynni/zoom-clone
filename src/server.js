@@ -25,76 +25,69 @@ instrument(wsServer, {
   auth: false,
 });
 
-function publicRooms() {
-  const {
-    sockets: {
-      adapter: { sids, rooms },
-    },
-  } = wsServer;
-  const publicRooms = [];
-  rooms.forEach((_, key) => {
-    if (sids.get(key) === undefined) {
-      publicRooms.push(key);
-    }
-  });
-  return publicRooms;
-}
+// chat
 
-function countUser(roomName) {
-  return wsServer.sockets.adapter.rooms.get(roomName)?.size;
-}
-
-wsServer.on("connection", (socket) => {
-  socket["nickname"] = "익명";
-  wsServer.sockets.emit("room_change", publicRooms());
-
-  socket.onAny((event) => {
-    console.log(wsServer.sockets.adapter);
-    console.log(`Socket Event : ${event}`);
-  });
-  socket.on("enter_room", (roomName, done) => {
-    socket.join(roomName);
-    done(countUser(roomName));
-    socket.to(roomName).emit("welcome", socket.nickname, countUser(roomName));
-    wsServer.sockets.emit("room_change", publicRooms());
-  });
-  socket.on("disconnecting", () => {
-    socket.rooms.forEach((room) => {
-      socket.to(room).emit("bye", socket.nickname, countUser(room) - 1);
-    });
-  });
-  socket.on("disconnect", () => {
-    wsServer.sockets.emit("room_change", publicRooms());
-  });
-  socket.on("nickname", (nickname) => {
-    socket["nickname"] = nickname;
-  });
-  socket.on("new_message", (roomName, msg, done) => {
-    socket.to(roomName).emit("new_message", `${socket.nickname} : ${msg}`);
-    done();
-  });
-});
-
-// const sockets = [];
-// // socket : 연결된 브라우저
-// wss.on("connection", (socket) => {
-//   sockets.push(socket);
-//   socket["nickname"] = "Anonymous";
-//   console.log("Connected to Browser ✅");
-//   socket.on("close", () => {
-//     console.log("Disconnected from the Browser ❌");
-//   });
-//   socket.on("message", (msg) => {
-//     const message = JSON.parse(msg);
-//     switch (message.type) {
-//       case "new_message":
-//         sockets.forEach((aSocket) =>
-//           aSocket.send(`${socket.nickname}: ${message.payload}`)
-//         );
-//       case "nickname":
-//         socket["nickname"] = message.payload;
+// function publicRooms() {
+//   const {
+//     sockets: {
+//       adapter: { sids, rooms },
+//     },
+//   } = wsServer;
+//   const publicRooms = [];
+//   rooms.forEach((_, key) => {
+//     if (sids.get(key) === undefined) {
+//       publicRooms.push(key);
 //     }
 //   });
+//   return publicRooms;
+// }
+
+// function countUser(roomName) {
+//   return wsServer.sockets.adapter.rooms.get(roomName)?.size;
+// }
+
+// wsServer.on("connection", (socket) => {
+//   socket["nickname"] = "익명";
+//   wsServer.sockets.emit("room_change", publicRooms());
+
+//   socket.onAny((event) => {
+//     console.log(wsServer.sockets.adapter);
+//     console.log(`Socket Event : ${event}`);
+//   });
+//   socket.on("enter_room", (roomName, done) => {
+//     socket.join(roomName);
+//     done(countUser(roomName));
+//     socket.to(roomName).emit("welcome", socket.nickname, countUser(roomName));
+//     wsServer.sockets.emit("room_change", publicRooms());
+//   });
+//   socket.on("disconnecting", () => {
+//     socket.rooms.forEach((room) => {
+//       socket.to(room).emit("bye", socket.nickname, countUser(room) - 1);
+//     });
+//   });
+//   socket.on("disconnect", () => {
+//     wsServer.sockets.emit("room_change", publicRooms());
+//   });
+//   socket.on("nickname", (nickname) => {
+//     socket["nickname"] = nickname;
+//   });
+//   socket.on("new_message", (roomName, msg, done) => {
+//     socket.to(roomName).emit("new_message", `${socket.nickname} : ${msg}`);
+//     done();
+//   });
 // });
+
+wsServer.on("connection", (socket) => {
+  socket.on("join_room", (roomName) => {
+    socket.join(roomName);
+    socket.to(roomName).emit("welcome");
+  });
+  socket.on("offer", (offer, roomName) => {
+    socket.to(roomName).emit("offer", offer);
+  });
+  socket.on("answer", (answer, roomName) => {
+    socket.to(roomName).emit("answer", answer);
+  });
+});
 
 httpServer.listen(3000, handleListen);
