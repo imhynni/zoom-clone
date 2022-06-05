@@ -260,3 +260,7 @@
 - offer와 answer받기를 모두 끝내면 peer-to-peer 연결의 양쪽에서 icecandidate라는 이벤트를 실행하기 시작
   - ICE candidate  
     webRTC에 필요한 프로토콜, 브라우저가 서로 소통할 수 있게 해주는 프로세스, 어떤 소통 방법이 가장 좋을 것인지를 제안
+- 브라우저가 candidate를 주고받음
+- 마지막으로 addstream event 등록
+- Sender는 다른 브라우저로 보내진 비디오와 오디오 데이터를 컨트롤하는 방법
+- localtunnel 이용해 링크 공개 가능 (평생 무료는 아님)
